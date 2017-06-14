@@ -2,34 +2,70 @@
 
 ## ¿Que es?
 - JSON Web Tokens
-- Estandar abierto, RFC 7519 [Link](https://tools.ietf.org/html/rfc7519)
-- Define una forma compacta y segura de la transmision de un objeto json
+- Estandar abierto, [RFC 7519](https://tools.ietf.org/html/rfc7519)
+- Define una forma compacta y segura de la transmision de un objeto JSON
 - Es un contenedor de informacion
-
 
 ## Partes
 - Cada parte esta codificada en Base64 y separada por un punto
+```
+# Estructura
+[<base64>JOSE].[<base64>Claims|PayLoad].[<hash>]
+```
 
-### JOSE
-- JavaScript Object Signing and Encryption
+### Header
+- JOSE JavaScript Object Signing and Encryption
 - Define cual es la *tecnologia criptografica | sistema de encriptacion* que se va a aplicar al token
 
 ### Algoritmos criptograficos
-- sda
+
+#### HS256
+- Genera un hash para un texto utilizando una clave privada
+- Solo pueden generarlo, aquellos que conocen la clave privada
+- Permite saber que el contenido no ha sido modificado
+- Permite saber quien es su creador
+- HMAC, Es un hash con SHA256
+
+#### RS256
+
 
 ```
-# code block
+# Ejemplo
 {
 "alg": "HS256", // Algoritmo criptografico a utilizar
 "typ": "JWT" 	// Tipo de token
 }
 ```
 
-### Claims | PayLoad
+### PayLoad
+- Claims
 - Almacena informacion del negocio
 
-### Firma de seguridad
+```
+# Ejemplo
+{
+"nombre": "Rodrigo"
+}
+```
+
+### Signature
+- Firma de seguridad
 - Permite dar validez al token
+
+```
+# Estructura
+HMAC(base64UrlEncode(JOSE)+"."+base64UrlEncode(claims),clave)
+```
+
+## Ejemplo de uso
+
+### Iniciar sesion
+- Cliente inicia sesion en el servidor, envia su usuario y clave
+- El sistema del servidor valida el usuario y clave, genera un token para esa sesion
+- El cliente recepciona el token
+- El cliente realiza peticiones al servidor, pero envia el token generado por este
+- El servidor valida el token (decodifica en base64, con su clave privada valida el hash), si todo esta correcto retorna el recurso solicitado
+
 
 
 - Permite representar claims de forma segura entre dos partes
@@ -93,4 +129,5 @@ browser<<<(return l jwt al el browser)<<<servidor
 browser>>>(envia el jwt con la authorization header)>>>servidor(valida el signature del jwt, obtiene la informacion del usuario desde el jwt)
 browser<<<(envia un respuesta al cliente)<<<servidor
 
-
+http://commonmark.org/help/
+https://en.support.wordpress.com/markdown-quick-reference/
